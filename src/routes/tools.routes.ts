@@ -3,10 +3,11 @@ import CreateToolsService from '../services/CreateToolsService';
 import DelelteToolService from '../services/DeleteToolService';
 import GetAllToolsService from '../services/GetAllToolsService';
 import GetToolByTag from '../services/GetToolByTag';
+import ensureAuthenticatedMiddleware from '../shared/middlewares/ensureAuthenticatedMiddleware';
 
 const toolsRoutes = Router();
 
-toolsRoutes.post('/', async (request, response) => {
+toolsRoutes.post('/', ensureAuthenticatedMiddleware, async (request, response) => {
   const {
     title, link, tags = [], description,
   } = request.body;
@@ -20,7 +21,7 @@ toolsRoutes.post('/', async (request, response) => {
   return response.json(newTool);
 });
 
-toolsRoutes.get('/', async (request, response) => {
+toolsRoutes.get('/', ensureAuthenticatedMiddleware, async (request, response) => {
   const service = new GetAllToolsService();
 
   const allTools = await service.execute();
@@ -28,7 +29,7 @@ toolsRoutes.get('/', async (request, response) => {
   return response.json(allTools);
 });
 
-toolsRoutes.get('/:tag', async (request, response) => {
+toolsRoutes.get('/:tag', ensureAuthenticatedMiddleware, async (request, response) => {
   const { tag } = request.params;
 
   const service = new GetToolByTag();
@@ -38,7 +39,7 @@ toolsRoutes.get('/:tag', async (request, response) => {
   return response.json(findByTag);
 });
 
-toolsRoutes.delete('/:id', async (request, response) => {
+toolsRoutes.delete('/:id', ensureAuthenticatedMiddleware, async (request, response) => {
   const { id } = request.params;
 
   const service = new DelelteToolService();
